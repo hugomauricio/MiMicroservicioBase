@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "TuNombre o Empresa",
+  "classifications": [ "WebAPI", "Microservicio", ".NET" ],
+  "identity": "TuEmpresa.Microservicio.Arquetipo",
+  "name": "Arquetipo Microservicio .NET",
+  "shortName": "msarquetipo",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "MiMicroservicioBase",  // Debe ser el nombre de tu proyecto base
+  "preferNameDirectory": true
+}
