@@ -39,7 +39,7 @@ jobs:
           curl -X POST \
             -H "Authorization: token $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
-            https://api.github.com/orgs/$OWNER/repos \
+            https://api.github.com/user/repos \
             -d "{\"name\":\"$REPO_NAME\", \"private\":true, \"description\":\"$REPO_DESC\"}"
 
       - name: Push código generado al nuevo repo
