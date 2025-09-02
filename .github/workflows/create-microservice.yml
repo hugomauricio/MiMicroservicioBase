@@ -1,0 +1,59 @@
+name: Create Microservice from .NET Template
+
+on:
+  workflow_dispatch:
+    inputs:
+      service_name:
+        description: 'Nombre del microservicio (ej: msa-product)'
+        required: true
+        type: string
+
+jobs:
+  generate-microservice:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout plantilla
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Instalar plantilla local
+        run: dotnet new install .
+
+      - name: Crear microservicio desde plantilla
+        run: |
+          dotnet new msarquetipo \
+            -n ${{ github.event.inputs.service_name }}
+
+      - name: Crear repositorio en GitHub
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          REPO_NAME: ${{ github.event.inputs.service_name }}
+          REPO_DESC: test
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/orgs/$OWNER/repos \
+            -d "{\"name\":\"$REPO_NAME\", \"private\":true, \"description\":\"$REPO_DESC\"}"
+
+      - name: Push código generado al nuevo repo
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          REPO_NAME: ${{ github.event.inputs.service_name }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          cd ${{ github.event.inputs.service_name }}
+          git init
+          git remote add origin https://x-access-token:$GH_TOKEN@github.com/$OWNER/$REPO_NAME.git
+          git config user.email "sacaquirinmoscoso@gmail.com"
+          git config user.name "Automation Bot"
+          git add .
+          git commit -m "Initial commit from .NET template"
+          git branch -M main
+          git push -u origin main
