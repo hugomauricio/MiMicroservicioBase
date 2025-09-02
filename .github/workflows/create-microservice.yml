@@ -49,9 +49,12 @@ jobs:
           OWNER: ${{ github.repository_owner }}
         run: |
           cd ${{ github.event.inputs.service_name }}
-          git remote remove origin || true
+          rm -rf .git   # 🔑 Eliminar repo Git heredado/corrupto
+          git init
           git remote add origin https://x-access-token:$GH_TOKEN@github.com/hugomauricio/$REPO_NAME.git
           git add .
-          git commit -m "Initial commit from .NET template" || echo "No changes to commit"
+          git config user.email "sacaquirinmoscoso@gmail.com"
+          git config user.name "Automation Bot"
+          git commit -m "Initial commit from .NET template"
           git branch -M main
           git push -u origin main
